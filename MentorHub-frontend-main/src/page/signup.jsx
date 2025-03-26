@@ -155,6 +155,30 @@ const SignUp = () => {
                   )}
                 </div>
 
+                {/* Mobile Number field */}
+                {/* Mobile Number Field */}
+                {/* <div>
+                  <input
+                    type="text"
+                    placeholder="Mobile Number"
+                    className={`block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-400 bg-white border ${
+                      errors.mobileNumber ? "border-red-500" : "border-gray-200"
+                    } rounded-lg focus:border-blue-400 focus:ring focus:ring-blue-400 focus:outline-none focus:ring-opacity-40`}
+                    {...register("mobileNumber", {
+                      required: "Mobile Number is required",
+                      pattern: {
+                        value: /^[0-9]{10}$/,
+                        message: "Invalid mobile number",
+                      },
+                    })}
+                  />
+                  {errors.mobileNumber && (
+                    <p className="text-sm text-red-500">
+                      {errors.mobileNumber.message}
+                    </p>
+                  )}
+                </div> */}
+
                 {/* Submit Button */}
                 <div className="mt-6">
                   <button
