@@ -15,7 +15,7 @@ const Booking = () => {
   const navigate = useNavigate();
   const { username, id } = useParams();
   const [serviceData, setServiceData] = useState(null);
-  const [mentorAvailability, setMentorAvailability] = useState(null);
+  const [mentorAvailability, setMentorAvailability] = useState([]); // null ke jagah initial val-->[]
   const [activeIndex, setActiveIndex] = useState(null);
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [loadingService, setLoadingService] = useState(false);
@@ -35,6 +35,7 @@ const Booking = () => {
   const getMentorAvailability = async (id, duration) => {
     setLoadingAvailability(true);
     const res = await availability.getMentorAvailability(id, duration);
+    // console.log("Mentor Availability:", res?.data?.availability); // Add.....................
     setMentorAvailability(res?.data?.availability);
     setLoadingAvailability(false);
   };
@@ -82,20 +83,21 @@ const Booking = () => {
               </div>
             ) : (
               <div className="flex gap-2 my-6">
-                {mentorAvailability?.map((item, index) => (
-                  <div
-                    onClick={() => {
-                      setActiveIndex(index);
-                      setSelectedSlot(null);
-                    }}
-                    key={item.id}
-                    className={`p-2 rounded-md cursor-pointer ${
-                      activeIndex === index ? "bg-blue-600" : ""
-                    }`}
-                  >
-                    {moment(item.date).format("DD MMM")}
-                  </div>
-                ))}
+                {Array.isArray(mentorAvailability) &&
+                  mentorAvailability?.map((item, index) => (
+                    <div
+                      onClick={() => {
+                        setActiveIndex(index);
+                        setSelectedSlot(null);
+                      }}
+                      key={item.id}
+                      className={`p-2 rounded-md cursor-pointer ${
+                        activeIndex === index ? "bg-blue-600" : ""
+                      }`}
+                    >
+                      {moment(item.date).format("DD MMM")}
+                    </div>
+                  ))}
               </div>
             )}
 

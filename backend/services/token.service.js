@@ -1,31 +1,51 @@
-const ServiceModel = require("../models/service.model");
+const jwt = require("jsonwebtoken");
+const moment = require("moment");
+const config = require("../config");
 
-const createService = async (serviceData) => {
-  return await ServiceModel.create(serviceData);
+const generateToken = (userId, expires, secret) => {
+  const payload = {
+    _id: userId,
+    iat: moment().unix(),
+    exp: expires.unix(),
+  };
+  return jwt.sign(payload, secret);
 };
 
-const updateService = async (serviceId, mentorId, updateData) => {
-  return await ServiceModel.findOneAndUpdate(
-    { _id: serviceId, mentor: mentorId },
-    updateData,
-    {
-      new: true,
-      runValidators: true,
-    }
+const generateAuthTokens = async (user) => {
+  const accessTokenExpires = moment().add(
+    config.jwt.accessExpirationMinutes,
+    "minutes"
   );
+
+  const accessToken = generateToken(
+    user._id,
+    accessTokenExpires,
+    config.jwt.accessSecret
+  );
+
+  return accessToken;
 };
 
-const getServiceByMentor = async (mentorId) => {
-  return await ServiceModel.find({ mentor: mentorId });
+const generateVerificationToken = async (userId) => {
+  const verificationTokenExpires = moment().add(
+    config.jwt.verificationExpirationMinutes,
+    "minutes"
+  );
+  const verificationToken = generateToken(
+    userId,
+    verificationTokenExpires,
+    config.jwt.verificationSecret
+  );
+
+  return verificationToken;
 };
 
-const getServiceById = async (serviceId) => {
-  return await ServiceModel.findById(serviceId);
+const verifyToken = async (token, secret) => {
+  if (secret === "accessToken") {
+    return await jwt.verify(token, config.jwt.accessSecret);
+  } else if (secret === "verify") {
+    return await jwt.verify(token, config.userVerification);
+  }
 };
 
-module.exports = {
-  createService,
-  updateService,
-  getServiceByMentor,
-  getServiceById,
-};
+module.exports = { generateAuthTokens, verifyToken, generateVerificationToken };

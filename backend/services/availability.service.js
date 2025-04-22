@@ -38,10 +38,14 @@ const getMentorAvailabilityForNext14Days = async (
     // Fetch the mentor's availability by userId
     const mentorAvailability = await AvailabilityModel.findOne({ userId });
 
+    // if (!mentorAvailability) {
+    //   return next(
+    //     new ApiError(httpStatus.notFound, "Mentor availability not found.")
+    //   );
+    // }
+
     if (!mentorAvailability) {
-      return next(
-        new ApiError(httpStatus.notFound, "Mentor availability not found.")
-      );
+      throw new ApiError(httpStatus.notFound, "Mentor availability not found.");
     }
 
     const { weeklyAvailability, unavailableDates } = mentorAvailability;

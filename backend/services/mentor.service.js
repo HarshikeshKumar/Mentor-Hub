@@ -14,7 +14,7 @@ const getMentorByUsername = async (username) => {
 };
 
 const getMentorServices = async (id) => {
-  return await ServiceModel.find({ mentor: id, active: true });
+  return await ServiceModel.find({ mentor: id, active: true }); // active: true hataya gaya ................................
 };
 
 module.exports = {
